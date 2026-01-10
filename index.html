@@ -5,24 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>news</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-    header { padding: 16px; border-bottom: 1px solid #ddd; }
-    header h1 { margin: 0; font-size: 24px; }
+    body { font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; margin: 0; padding: 0; line-height: 1.7; color: #111; }
+    header { padding: 16px 20px; border-bottom: 1px solid #ddd; position: sticky; top: 0; background: #fff; z-index: 10; }
+    header h1 { margin: 0; font-size: 24px; cursor: pointer; letter-spacing: -1px; }
+    
     nav { display: flex; gap: 14px; margin-top: 8px; }
-    nav span { cursor: pointer; color: #888; }
-    nav span.active { color: #000; font-weight: bold; }
-    main { padding: 16px; }
-    .news-title { padding: 14px 0; border-bottom: 1px solid #eee; cursor: pointer; }
-    .article h2 { margin-top: 0; }
-    .article p { line-height: 1.7; margin: 14px 0; }
-    .back { margin-bottom: 20px; cursor: pointer; color: #555; }
+    nav span { color: #888; font-size: 15px; }
+    /* 연예 메뉴만 활성 상태 스타일 */
+    nav span.active { color: #000; font-weight: bold; border-bottom: 2px solid #000; cursor: pointer; }
+    
+    main { padding: 20px; max-width: 800px; margin: 0 auto; }
+    
+    /* 리스트 스타일 */
+    .news-title { padding: 18px 0; border-bottom: 1px solid #eee; cursor: pointer; font-size: 17px; word-break: keep-all; font-weight: 500; }
+    .news-title:hover { text-decoration: underline; color: #444; }
+    
+    /* 상세 페이지 스타일 */
+    .article h2 { margin-top: 0; font-size: 24px; line-height: 1.4; word-break: keep-all; margin-bottom: 10px; }
+    .article .date { font-size: 13px; color: #999; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .article p { line-height: 1.8; margin: 18px 0; font-size: 16px; color: #333; text-align: justify; word-break: keep-all; }
+    
+    .back { margin-bottom: 20px; cursor: pointer; color: #888; display: inline-block; font-size: 14px; }
+    .back:hover { color: #000; text-decoration: underline; }
   </style>
 </head>
 <body>
   <header>
-    <h1>news</h1>
+    <h1 onclick="showList(true)">news</h1>
     <nav>
-      <span class="active">연예</span>
+      <span class="active" onclick="showList(true)">연예</span>
       <span>최신뉴스</span>
       <span>사회</span>
       <span>건강</span>
@@ -101,7 +112,7 @@
           "온라인 커뮤니티와 SNS에서는 “음악 전공 수업을 예능으로 보는 느낌”, “편안해서 끊지 않고 끝까지 보게 된다”는 반응이 다수 등장했다. 특히 참가자들이 시행착오를 겪으며 곡을 수정해 나가는 과정이 그대로 담긴 점이 호평을 받고 있다.",
           "일부 시청자는 “기존 오디션은 누가 떨어질지 긴장하며 봤다면, 이 프로그램은 어떤 결과물이 나올지가 더 궁금하다”고 말했다.",
           "트위터(X)의 한 시청자는 “경쟁보다 성장에 집중하는 분위기가 오히려 더 현실적”이라고 평가했다.",
-          "제작진은 이러한 반응에 대해 “〈HIT THE DROP〉은 청소년·청년 창작자뿐 아니라, 음악에 관심 있는 시청자 모두를 대상으로 한 프로그램”이라며 “음악을 만드는 사람들의 고민과 선택을 이해할 수 있도록 구성했다”고 설명했다."
+          "제작진은 이러한 반응에 대해 “〈HIT THE DROP〉은 청소년·청년 창작자뿐 아니라, 음악에 관심 있는 시청자 모두를 대상으로 한 프로그램”이라며 “음악을 만드는 사람들의 고민과 선택을 이해할 수 있도록 구성했다”고 설명했다.",
           "전문가들은 지원형 오디션이라는 새로운 포맷이 향후 음악 예능의 흐름에 변화를 줄 가능성도 있다고 분석한다."
         ]
       },
@@ -115,10 +126,10 @@
           "이후 음향 엔지니어가 사운드의 질감과 밸런스를 보완하며 프로듀서의 의도를 구현하는 과정이 자연스럽게 이어진다.",
           "이 같은 흐름은 음악 제작에서 프로듀서가 맡는 핵심적인 역할을 명확히 드러낸다는 평가다.",
           "업계 관계자들은 “〈HIT THE DROP〉은 프로듀서를 단순한 작곡가가 아닌, 프로젝트 전체를 총괄하는 창작자로 묘사한다”며 “음향 엔지니어와의 협업 구조 역시 현실적인 방식에 가깝다”고 분석했다.",
-          "한 관계자는 “음향이 주도권을 갖기보다는, 프로듀서의 방향성을 어떻게 구현하느냐에 초점을 맞춘 점이 인상적”이라고 전했다."
-          "시청자 반응도 비슷하다. 온라인 커뮤니티에서는 “프로듀서가 어떤 고민을 거쳐 곡의 방향을 정하는지 알 수 있다”, “음향은 보조적이지만 중요한 역할로 잘 그려진다”는 평가가 이어지고 있다."
-          "음악 제작 경험이 없는 시청자들도 프로듀서의 사고 과정을 따라가며 프로그램에 몰입하고 있다는 반응이다."
-          "제작진은 “〈HIT THE DROP〉의 중심은 프로듀서”라며 “음향 엔지니어와의 협업은 그 방향을 더 잘 완성하기 위한 과정으로 담아내고 있다”고 밝혔다."
+          "한 관계자는 “음향이 주도권을 갖기보다는, 프로듀서의 방향성을 어떻게 구현하느냐에 초점을 맞춘 점이 인상적”이라고 전했다.",
+          "시청자 반응도 비슷하다. 온라인 커뮤니티에서는 “프로듀서가 어떤 고민을 거쳐 곡의 방향을 정하는지 알 수 있다”, “음향은 보조적이지만 중요한 역할로 잘 그려진다”는 평가가 이어지고 있다.",
+          "음악 제작 경험이 없는 시청자들도 프로듀서의 사고 과정을 따라가며 프로그램에 몰입하고 있다는 반응이다.",
+          "제작진은 “〈HIT THE DROP〉의 중심은 프로듀서”라며 “음향 엔지니어와의 협업은 그 방향을 더 잘 완성하기 위한 과정으로 담아내고 있다”고 밝혔다.",
           "이어 “음악 제작의 주도권과 협업 구조를 동시에 보여주는 것이 이번 프로젝트의 핵심”이라고 덧붙였다."
         ]
       }
@@ -126,23 +137,42 @@
 
     const app = document.getElementById('app');
 
-    function showList() {
-      app.innerHTML = articles.map(a => `<div class="news-title" onclick="showArticle(${a.id})">${a.title}</div>`).join('');
+    function showList(pushState = true) {
+      window.scrollTo(0, 0); // 리스트 이동 시 스크롤 위로
+      app.innerHTML = articles.map(a => `
+        <div class="news-title" onclick="showArticle(${a.id})">${a.title}</div>
+      `).join('');
+      
+      if (pushState) history.pushState({ view: 'list' }, '', '#list');
     }
 
-    function showArticle(id) {
+    function showArticle(id, pushState = true) {
       const a = articles.find(x => x.id === id);
+      if (!a) return;
+
+      window.scrollTo(0, 0); // 기사 이동 시 스크롤 위로
       app.innerHTML = `
-        <div class="back" onclick="showList()">← 목록으로</div>
+        <div class="back" onclick="showList(true)">← 연예로 돌아가기</div>
         <div class="article">
           <h2>${a.title}</h2>
-          <div>${a.date}</div>
+          <div class="date">${a.date}</div>
           ${a.paragraphs.map(p => `<p>${p}</p>`).join('')}
         </div>
       `;
+      
+      if (pushState) history.pushState({ view: 'detail', id: id }, '', `#article/${id}`);
     }
 
-    showList();
+    // 뒤로가기 제어
+    window.onpopstate = function(event) {
+      if (event.state && event.state.view === 'detail') {
+        showArticle(event.state.id, false);
+      } else {
+        showList(false);
+      }
+    };
+
+    showList(false);
   </script>
 </body>
 </html>

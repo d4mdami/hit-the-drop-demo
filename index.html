@@ -6,23 +6,22 @@
   <title>news</title>
   <style>
     body { font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; margin: 0; padding: 0; line-height: 1.7; color: #111; }
-    header { padding: 16px 20px; border-bottom: 1px solid #ddd; position: sticky; top: 0; background: #fff; z-index: 10; }
-    header h1 { margin: 0; font-size: 24px; cursor: pointer; letter-spacing: -1px; }
+    header { padding: 16px 20px; border-bottom: 1px solid #ddd; }
+    header h1 { margin: 0; font-size: 24px; cursor: pointer; }
     
     nav { display: flex; gap: 14px; margin-top: 8px; }
-    nav span { color: #888; font-size: 15px; }
-    /* 연예 메뉴만 활성 상태 스타일 */
+    nav span { color: #888; font-size: 15px; cursor: default; }
     nav span.active { color: #000; font-weight: bold; border-bottom: 2px solid #000; cursor: pointer; }
     
     main { padding: 16px; max-width: 800px; margin: 0 auto; }
     
-    /* 리스트 스타일 */
-    .news-title { padding: 18px 0; border-bottom: 1px solid #eee; cursor: pointer; font-size: 17px; word-break: keep-all; font-weight: 500; }
-    .news-title:hover { text-decoration: underline; color: #444; }
+    /* 목록 스타일 */
+    .news-title { padding: 18px 0; border-bottom: 1px solid #eee; cursor: pointer; font-size: 17px; font-weight: 500; word-break: keep-all; }
+    .news-title:hover { text-decoration: underline; }
     
     /* 상세 페이지 스타일 */
-    .article h2 { margin-top: 0; font-size: 24px; line-height: 1.4; word-break: keep-all; margin-bottom: 10px; }
-    .article .date { font-size: 13px; color: #999; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .article h2 { margin-top: 0; font-size: 24px; line-height: 1.4; word-break: keep-all; }
+    .article .date { font-size: 13px; color: #999; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
     .article p { line-height: 1.8; margin: 18px 0; font-size: 16px; color: #333; text-align: justify; word-break: keep-all; }
     
     .back { margin-bottom: 20px; cursor: pointer; color: #888; display: inline-block; font-size: 14px; }
@@ -40,10 +39,10 @@
     </nav>
   </header>
 
-  <main id="app"></main>
+  <main id="app">
+    </main>
 
   <script>
-    // 사용자님이 주신 원본 데이터 (문장 다듬지 않고 그대로 유지)
     const articles = [
       {
         id: 1,
@@ -113,7 +112,7 @@
           "온라인 커뮤니티와 SNS에서는 “음악 전공 수업을 예능으로 보는 느낌”, “편안해서 끊지 않고 끝까지 보게 된다”는 반응이 다수 등장했다. 특히 참가자들이 시행착오를 겪으며 곡을 수정해 나가는 과정이 그대로 담긴 점이 호평을 받고 있다.",
           "일부 시청자는 “기존 오디션은 누가 떨어질지 긴장하며 봤다면, 이 프로그램은 어떤 결과물이 나올지가 더 궁금하다”고 말했다.",
           "트위터(X)의 한 시청자는 “경쟁보다 성장에 집중하는 분위기가 오히려 더 현실적”이라고 평가했다.",
-          "제작진은 이러한 반응에 대해 “〈HIT THE DROP〉은 청소년·청년 창작자뿐 아니라, 음악에 관심 있는 시청자 모두를 대상으로 한 프로그램”이라며 “음악을 만드는 사람들의 고민과 선택을 이해할 수 있도록 구성했다”고 설명했다.",
+          "제작진은 “〈HIT THE DROP〉은 청소년·청년 창작자뿐 아니라, 음악에 관심 있는 시청자 모두를 대상으로 한 프로그램”이라며 “음악을 만드는 사람들의 고민과 선택을 이해할 수 있도록 구성했다”고 설명했다.",
           "전문가들은 지원형 오디션이라는 새로운 포맷이 향후 음악 예능의 흐름에 변화를 줄 가능성도 있다고 분석한다."
         ]
       },
@@ -138,51 +137,39 @@
 
     const app = document.getElementById('app');
 
-    // 리스트 표시 함수
+    // 1. 목록 보기 함수
     function showList() {
-      window.scrollTo(0, 0); 
-      let html = "";
+      window.scrollTo(0, 0);
+      let listHtml = "";
       for (let i = 0; i < articles.length; i++) {
-        html += `<div class="news-title" onclick="showArticle(${articles[i].id})">${articles[i].title}</div>`;
+        listHtml += '<div class="news-title" onclick="showArticle(' + articles[i].id + ')">' + articles[i].title + '</div>';
       }
-      app.innerHTML = html;
-      
-      // 뒤로가기 가능하게 URL 해시 설정 (안정성을 위해 해시만 사용)
-      location.hash = "list";
+      app.innerHTML = listHtml;
     }
 
-    // 상세 페이지 표시 함수
+    // 2. 상세 보기 함수
     function showArticle(id) {
-      const a = articles.find(x => x.id === id);
+      const a = articles.find(function(item) { return item.id === id; });
       if (!a) return;
 
       window.scrollTo(0, 0);
       let paragraphsHtml = "";
       for (let j = 0; j < a.paragraphs.length; j++) {
-        paragraphsHtml += `<p>${a.paragraphs[j]}</p>`;
+        paragraphsHtml += '<p>' + a.paragraphs[j] + '</p>';
       }
 
-      app.innerHTML = `
-        <div class="back" onclick="showList()">← 연예로 돌아가기</div>
-        <div class="article">
-          <h2>${a.title}</h2>
-          <div class="date">${a.date}</div>
-          ${paragraphsHtml}
-        </div>
-      `;
-      
-      location.hash = "article" + id;
+      app.innerHTML = 
+        '<div class="back" onclick="showList()">← 연예로 돌아가기</div>' +
+        '<div class="article">' +
+          '<h2>' + a.title + '</h2>' +
+          '<div class="date">' + a.date + '</div>' +
+          paragraphsHtml +
+        '</div>';
     }
 
-    // 브라우저 뒤로가기 대응
-    window.onhashchange = function() {
-      if (!location.hash || location.hash === "#list") {
-        showList();
-      }
-    };
-
-    // 처음 실행
+    // 3. 페이지가 로드되면 바로 목록 실행
     showList();
+
   </script>
 </body>
 </html>

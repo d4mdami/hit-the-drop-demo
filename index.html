@@ -14,7 +14,7 @@
     /* 연예 메뉴만 활성 상태 스타일 */
     nav span.active { color: #000; font-weight: bold; border-bottom: 2px solid #000; cursor: pointer; }
     
-    main { padding: 20px; max-width: 800px; margin: 0 auto; }
+    main { padding: 16px; max-width: 800px; margin: 0 auto; }
     
     /* 리스트 스타일 */
     .news-title { padding: 18px 0; border-bottom: 1px solid #eee; cursor: pointer; font-size: 17px; word-break: keep-all; font-weight: 500; }
@@ -31,9 +31,9 @@
 </head>
 <body>
   <header>
-    <h1 onclick="showList(true)">news</h1>
+    <h1 onclick="showList()">news</h1>
     <nav>
-      <span class="active" onclick="showList(true)">연예</span>
+      <span class="active" onclick="showList()">연예</span>
       <span>최신뉴스</span>
       <span>사회</span>
       <span>건강</span>
@@ -43,6 +43,7 @@
   <main id="app"></main>
 
   <script>
+    // 사용자님이 주신 원본 데이터 (문장 다듬지 않고 그대로 유지)
     const articles = [
       {
         id: 1,
@@ -137,42 +138,51 @@
 
     const app = document.getElementById('app');
 
-    function showList(pushState = true) {
-      window.scrollTo(0, 0); // 리스트 이동 시 스크롤 위로
-      app.innerHTML = articles.map(a => `
-        <div class="news-title" onclick="showArticle(${a.id})">${a.title}</div>
-      `).join('');
+    // 리스트 표시 함수
+    function showList() {
+      window.scrollTo(0, 0); 
+      let html = "";
+      for (let i = 0; i < articles.length; i++) {
+        html += `<div class="news-title" onclick="showArticle(${articles[i].id})">${articles[i].title}</div>`;
+      }
+      app.innerHTML = html;
       
-      if (pushState) history.pushState({ view: 'list' }, '', '#list');
+      // 뒤로가기 가능하게 URL 해시 설정 (안정성을 위해 해시만 사용)
+      location.hash = "list";
     }
 
-    function showArticle(id, pushState = true) {
+    // 상세 페이지 표시 함수
+    function showArticle(id) {
       const a = articles.find(x => x.id === id);
       if (!a) return;
 
-      window.scrollTo(0, 0); // 기사 이동 시 스크롤 위로
+      window.scrollTo(0, 0);
+      let paragraphsHtml = "";
+      for (let j = 0; j < a.paragraphs.length; j++) {
+        paragraphsHtml += `<p>${a.paragraphs[j]}</p>`;
+      }
+
       app.innerHTML = `
-        <div class="back" onclick="showList(true)">← 연예로 돌아가기</div>
+        <div class="back" onclick="showList()">← 연예로 돌아가기</div>
         <div class="article">
           <h2>${a.title}</h2>
           <div class="date">${a.date}</div>
-          ${a.paragraphs.map(p => `<p>${p}</p>`).join('')}
+          ${paragraphsHtml}
         </div>
       `;
       
-      if (pushState) history.pushState({ view: 'detail', id: id }, '', `#article/${id}`);
+      location.hash = "article" + id;
     }
 
-    // 뒤로가기 제어
-    window.onpopstate = function(event) {
-      if (event.state && event.state.view === 'detail') {
-        showArticle(event.state.id, false);
-      } else {
-        showList(false);
+    // 브라우저 뒤로가기 대응
+    window.onhashchange = function() {
+      if (!location.hash || location.hash === "#list") {
+        showList();
       }
     };
 
-    showList(false);
+    // 처음 실행
+    showList();
   </script>
 </body>
 </html>

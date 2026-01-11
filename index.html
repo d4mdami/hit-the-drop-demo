@@ -26,6 +26,11 @@
       background:var(--bg);
       color:var(--text);
       line-height:1.7;
+
+      /* ✅ 글자 렌더링/자간 통일 */
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+      letter-spacing: -0.2px;
     }
 
     header{
@@ -137,9 +142,7 @@
     }
 
     /* Headline */
-    .headline{
-      cursor:pointer;
-    }
+    .headline{ cursor:pointer; }
     .headline .hero{
       width:100%;
       height:260px;
@@ -152,9 +155,7 @@
       object-fit:cover;
       display:block;
     }
-    .headline .body{
-      padding:14px 16px 16px;
-    }
+    .headline .body{ padding:14px 16px 16px; }
     .headline .title{
       font-size:22px;
       line-height:1.35;
@@ -213,10 +214,30 @@
       font-size:16px;
       font-weight:800;
       line-height:1.35;
-      margin:0 0 8px;
+      margin:0 0 6px;
       word-break:keep-all;
     }
-    .row-meta{ font-size:12px; color:#666; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    /* ✅ 목록 요약 1줄 */
+    .row-summary{
+      font-size:13px;
+      color:#777;
+      line-height:1.4;
+      display:-webkit-box;
+      -webkit-line-clamp:1;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+      margin:0 0 8px;
+      letter-spacing:-0.15px;
+    }
+
+    .row-meta{
+      font-size:12px;
+      color:#666;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
 
     /* Sidebar ranking */
     .rank .item{
@@ -276,15 +297,13 @@
       display:block;
     }
 
-    .article{
-      padding:18px 18px 20px;
-    }
+    .article{ padding:18px 18px 20px; }
 
     .article h2{
       margin:0 0 10px;
       font-size:26px;
       line-height:1.35;
-      letter-spacing:-0.3px;
+      letter-spacing:-0.4px; /* ✅ 통일 */
       word-break:keep-all;
       font-weight:900;
     }
@@ -308,6 +327,7 @@
       color:#333;
       text-align:justify;
       word-break:keep-all;
+      letter-spacing:-0.15px; /* ✅ 통일 */
     }
 
     .actions{
@@ -421,7 +441,6 @@
     }
     .comment-del:hover{ color:#111; text-decoration:underline; }
 
-    /* Footer small */
     .footnote{
       font-size:12px;
       color:#777;
@@ -463,7 +482,6 @@
   <main id="app"></main>
 
   <script>
-    // ===== 이미지: 외부 링크 없이도 보이게 "SVG 데이터 URL" 기본 생성 =====
     function makeCoverDataUrl(seedText){
       const safe = String(seedText).replace(/</g, "&lt;").replace(/>/g, "&gt;").slice(0, 42);
       const svg =
@@ -583,7 +601,6 @@
       }
     ];
 
-    // ===== localStorage keys =====
     const app = document.getElementById('app');
     const keyLikes = (id) => `damnews_likes_${id}`;
     const keyComments = (id) => `damnews_comments_${id}`;
@@ -599,6 +616,13 @@
         .replaceAll("'","&#039;");
     }
 
+    /* ✅ 목록 요약 1줄 자동 생성 */
+    function makeSummary(paragraphs){
+      const first = (paragraphs && paragraphs[0]) ? paragraphs[0] : "";
+      const one = first.replace(/\s+/g, " ").trim();
+      return one.length > 70 ? one.slice(0, 70) + "…" : one;
+    }
+
     function getNum(k, fallback=0){
       const n = parseInt(localStorage.getItem(k) || "", 10);
       return Number.isFinite(n) ? n : fallback;
@@ -611,15 +635,12 @@
     function getViews(id){
       let v = getNum(keyViews(id), -1);
       if (v < 0){
-        // 처음 1번만 랜덤 생성 후 고정 저장
-        // (뉴스 느낌: 800~38,000)
         v = Math.floor(800 + Math.random() * 37200);
         setNum(keyViews(id), v);
       }
       return v;
     }
     function bumpViews(id){
-      // 상세 열 때마다 1 증가(너무 티 안 나게)
       const v = getViews(id) + 1;
       setNum(keyViews(id), v);
       return v;
@@ -654,7 +675,6 @@
       return `${yyyy}.${mm}.${dd} ${hh}:${mi}`;
     }
 
-    // cover 기본값 세팅
     for (let i=0;i<articles.length;i++){
       if (!articles[i].cover) articles[i].cover = makeCoverDataUrl(articles[i].title);
     }
@@ -664,8 +684,6 @@
       setLikes(articleId, n);
       const el = document.getElementById("likeCount");
       if (el) el.textContent = String(n);
-
-      // 목록에 반영은 목록으로 돌아가면 자동
     }
 
     function submitComment(articleId){
@@ -687,7 +705,6 @@
       textEl.value = "";
       document.getElementById("commentList").innerHTML = renderComments(articleId);
 
-      // 댓글 수 표시 업데이트
       const cc = document.getElementById("commentCount");
       if (cc) cc.textContent = String(arr.length);
     }
@@ -731,14 +748,8 @@
       const data = { title: a.title, text: `${PUBLISHER} · ${a.title}`, url };
 
       if (navigator.share){
-        try{
-          await navigator.share(data);
-          return;
-        }catch(e){
-          // 사용자가 취소하면 조용히
-        }
+        try{ await navigator.share(data); return; }catch(e){}
       }
-      // fallback: copy to clipboard
       try{
         await navigator.clipboard.writeText(url);
         alert("링크를 복사했어!");
@@ -754,16 +765,13 @@
     function showList(){
       window.scrollTo(0,0);
 
-      // 헤드라인은 1번 기사로 고정(원하면 id 바꾸면 됨)
       const headline = articles[0];
 
-      // 랭킹(조회수 기준 TOP 5)
       const ranked = [...articles]
         .map(a => ({...a, views: getViews(a.id)}))
         .sort((a,b) => b.views - a.views)
         .slice(0,5);
 
-      // 목록(헤드라인 제외)
       const rest = articles.slice(1);
 
       let html = `
@@ -822,6 +830,7 @@
                   <div class="thumb"><img alt="" src="${a.cover}"></div>
                   <div>
                     <div class="row-title">${a.title}</div>
+                    <div class="row-summary">${escapeHtml(makeSummary(a.paragraphs))}</div>
                     <div class="row-meta">
                       <span>${a.date}</span>
                       <span class="chip">담뉴스</span>
@@ -838,7 +847,7 @@
       `;
 
       app.innerHTML = html;
-      location.hash = ""; // 목록 상태
+      location.hash = "";
     }
 
     function showArticle(id){
@@ -847,20 +856,16 @@
 
       window.scrollTo(0,0);
 
-      // 조회수 증가(상세 볼 때 1씩)
       const views = bumpViews(id);
-
       const reporter = getReporter(id);
       const likeCount = getLikes(id);
       const comments = getComments(id);
 
-      // 본문 텍스트는 그대로 출력(변경/요약 없음)
       let paragraphsHtml = "";
       for (let j=0;j<a.paragraphs.length;j++){
         paragraphsHtml += "<p>" + a.paragraphs[j] + "</p>";
       }
 
-      // 관련 기사(자기 제외 3개)
       const related = articles.filter(x => x.id !== id).slice(0,3);
 
       app.innerHTML = `
@@ -926,7 +931,6 @@
       location.hash = "article-" + id;
     }
 
-    // 해시로 바로 기사 열기 지원 (#article-3)
     function boot(){
       const h = location.hash || "";
       const m = h.match(/^#article-(\d+)$/);
@@ -942,31 +946,3 @@
   </script>
 </body>
 </html>
-
-/* 글자 렌더링/자간 통일 */
-body{
-  -webkit-font-smoothing: antialiased;
-  text-rendering: geometricPrecision;
-  letter-spacing: -0.2px;
-}
-.article h2{ letter-spacing: -0.4px; }
-.article p{ letter-spacing: -0.15px; }
-
-/* 목록 요약 1줄 */
-.row-summary{
-  font-size: 13px;
-  color: #777;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-top: 2px;
-}
-
-listHtml +=
-  '<div class="news-title" onclick="showArticle(' + articles[i].id + ')">' +
-    '<div>' + articles[i].title + '</div>' +
-    '<div class="row-summary">' + makeSummary(articles[i].paragraphs) + '</div>' +
-  '</div>';
-

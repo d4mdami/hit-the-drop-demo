@@ -5,32 +5,453 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>news</title>
   <style>
-    body { font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; margin: 0; padding: 0; line-height: 1.7; color: #111; }
-    header { padding: 16px 20px; border-bottom: 1px solid #ddd; }
-    header h1 { margin: 0; font-size: 24px; cursor: pointer; }
-    
-    nav { display: flex; gap: 14px; margin-top: 8px; }
-    nav span { color: #888; font-size: 15px; cursor: default; }
-    nav span.active { color: #000; font-weight: bold; border-bottom: 2px solid #000; cursor: pointer; }
-    
-    main { padding: 16px; max-width: 800px; margin: 0 auto; }
-    
-    /* 목록 스타일 */
-    .news-title { padding: 18px 0; border-bottom: 1px solid #eee; cursor: pointer; font-size: 17px; font-weight: 500; word-break: keep-all; }
-    .news-title:hover { text-decoration: underline; }
-    
-    /* 상세 페이지 스타일 */
-    .article h2 { margin-top: 0; font-size: 24px; line-height: 1.4; word-break: keep-all; }
-    .article .date { font-size: 13px; color: #999; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    .article p { line-height: 1.8; margin: 18px 0; font-size: 16px; color: #333; text-align: justify; word-break: keep-all; }
-    
-    .back { margin-bottom: 20px; cursor: pointer; color: #888; display: inline-block; font-size: 14px; }
-    .back:hover { color: #000; text-decoration: underline; }
+    :root{
+      --bg:#f6f7f8;
+      --paper:#fff;
+      --text:#111;
+      --muted:#666;
+      --line:#e6e6e6;
+      --chip:#f1f2f3;
+      --accent:#111;
+      --blue:#1a73e8;
+      --radius:14px;
+      --shadow:0 10px 26px rgba(0,0,0,.06);
+      --max:980px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.7;
+    }
+
+    header{
+      background:var(--paper);
+      border-bottom:1px solid var(--line);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+
+    .topbar{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:16px 18px 10px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    header h1{
+      margin:0;
+      font-size:24px;
+      cursor:pointer;
+      letter-spacing:-0.3px;
+    }
+
+    .brand{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .logo{
+      width:10px;
+      height:10px;
+      border-radius:2px;
+      background:#111;
+      display:inline-block;
+      margin-right:6px;
+    }
+
+    .subtitle{
+      font-size:12px;
+      color:#777;
+      margin-top:2px;
+    }
+
+    nav{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:0 18px 10px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+
+    nav span{
+      font-size:15px;
+      color:#777;
+      padding:8px 2px;
+      cursor:default;
+      border-bottom:2px solid transparent;
+    }
+    nav span.active{
+      color:#000;
+      font-weight:700;
+      cursor:pointer;
+      border-bottom-color:#000;
+    }
+
+    main{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:16px 18px 28px;
+    }
+
+    /* ====== LIST LAYOUT ====== */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:14px;
+    }
+
+    .panel{
+      background:var(--paper);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .panel-head{
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .panel-head .label{
+      font-weight:800;
+      font-size:14px;
+      letter-spacing:-0.2px;
+    }
+    .panel-head .more{
+      font-size:12px;
+      color:#777;
+    }
+
+    /* Headline */
+    .headline{
+      cursor:pointer;
+    }
+    .headline .hero{
+      width:100%;
+      height:260px;
+      background:#e9eaec;
+      border-bottom:1px solid var(--line);
+    }
+    .headline .hero img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .headline .body{
+      padding:14px 16px 16px;
+    }
+    .headline .title{
+      font-size:22px;
+      line-height:1.35;
+      letter-spacing:-0.3px;
+      margin:0 0 10px;
+      font-weight:900;
+      word-break:keep-all;
+    }
+    .meta{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-size:12px;
+      color:#666;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:var(--chip);
+      border:1px solid #eee;
+      color:#444;
+      font-size:12px;
+    }
+
+    /* List items */
+    .list .row{
+      display:grid;
+      grid-template-columns: 132px 1fr;
+      gap:12px;
+      padding:12px 14px;
+      border-bottom:1px solid #f0f0f0;
+      cursor:pointer;
+      align-items:center;
+    }
+    .list .row:last-child{ border-bottom:none; }
+
+    .thumb{
+      width:132px;
+      height:84px;
+      background:#e9eaec;
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid #eee;
+    }
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .row-title{
+      font-size:16px;
+      font-weight:800;
+      line-height:1.35;
+      margin:0 0 8px;
+      word-break:keep-all;
+    }
+    .row-meta{ font-size:12px; color:#666; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+    /* Sidebar ranking */
+    .rank .item{
+      padding:12px 14px;
+      border-bottom:1px solid #f0f0f0;
+      cursor:pointer;
+    }
+    .rank .item:last-child{ border-bottom:none; }
+    .rank .no{
+      display:inline-flex;
+      width:22px;
+      height:22px;
+      border-radius:6px;
+      background:#111;
+      color:#fff;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      font-weight:800;
+      margin-right:10px;
+      flex-shrink:0;
+    }
+    .rank .t{
+      font-size:14px;
+      font-weight:800;
+      line-height:1.35;
+      word-break:keep-all;
+    }
+
+    /* ====== ARTICLE ====== */
+    .back{
+      display:inline-block;
+      margin:6px 0 14px;
+      font-size:14px;
+      color:#777;
+      cursor:pointer;
+    }
+    .back:hover{ color:#000; text-decoration:underline; }
+
+    .article-wrap{
+      background:var(--paper);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .article-hero{
+      height:320px;
+      background:#e9eaec;
+      border-bottom:1px solid var(--line);
+    }
+    .article-hero img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .article{
+      padding:18px 18px 20px;
+    }
+
+    .article h2{
+      margin:0 0 10px;
+      font-size:26px;
+      line-height:1.35;
+      letter-spacing:-0.3px;
+      word-break:keep-all;
+      font-weight:900;
+    }
+
+    .byline{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-size:13px;
+      color:#666;
+      padding-bottom:12px;
+      margin-bottom:14px;
+      border-bottom:1px solid #eee;
+    }
+
+    .article p{
+      font-size:16px;
+      line-height:1.9;
+      margin:18px 0;
+      color:#333;
+      text-align:justify;
+      word-break:keep-all;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:14px 0 8px;
+    }
+    .btn{
+      border:1px solid #ddd;
+      background:#fff;
+      color:#111;
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:14px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btn:hover{ border-color:#bbb; }
+    .btn.primary{
+      background:#111;
+      border-color:#111;
+      color:#fff;
+    }
+
+    .section{
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid #eee;
+    }
+    .section h3{
+      margin:0 0 12px;
+      font-size:15px;
+      font-weight:900;
+      letter-spacing:-0.2px;
+    }
+
+    /* Related */
+    .related .item{
+      border:1px solid #eee;
+      border-radius:12px;
+      padding:12px;
+      cursor:pointer;
+      background:#fff;
+    }
+    .related .item:hover{ border-color:#ccc; }
+    .related .t{ font-size:15px; font-weight:800; margin-bottom:4px; word-break:keep-all; }
+    .related .m{ font-size:12px; color:#666; display:flex; gap:8px; flex-wrap:wrap; }
+
+    /* Comments */
+    .comment-box{
+      border:1px solid #eee;
+      border-radius:12px;
+      padding:12px;
+      background:#fff;
+    }
+    .comment-form{
+      display:grid;
+      grid-template-columns: 160px 1fr;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .comment-form input,
+    .comment-form textarea{
+      border:1px solid #ddd;
+      border-radius:10px;
+      padding:10px;
+      font-size:14px;
+      font-family:inherit;
+      outline:none;
+      background:#fff;
+    }
+    .comment-form textarea{ min-height:90px; resize:vertical; }
+    .comment-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      grid-column: 1 / -1;
+    }
+    .comment-item{
+      border-top:1px solid #f1f1f1;
+      padding-top:12px;
+      margin-top:12px;
+    }
+    .comment-item:first-child{
+      border-top:none;
+      padding-top:0;
+      margin-top:0;
+    }
+    .comment-head{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+    .comment-name{ font-weight:900; font-size:13px; }
+    .comment-time{ font-size:12px; color:#888; margin-left:8px; font-weight:400; }
+    .comment-text{
+      margin-top:6px;
+      font-size:14px;
+      color:#333;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .comment-del{
+      font-size:12px;
+      color:#999;
+      cursor:pointer;
+    }
+    .comment-del:hover{ color:#111; text-decoration:underline; }
+
+    /* Footer small */
+    .footnote{
+      font-size:12px;
+      color:#777;
+      margin-top:10px;
+    }
+
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px){
+      .list .row{ grid-template-columns: 110px 1fr; }
+      .thumb{ width:110px; height:74px; }
+      .headline .hero{ height:210px; }
+      .article-hero{ height:220px; }
+      .comment-form{ grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1 onclick="showList()">news</h1>
+    <div class="topbar">
+      <div>
+        <div class="brand">
+          <span class="logo"></span>
+          <h1 onclick="showList()">news</h1>
+        </div>
+        <div class="subtitle">담뉴스 · Entertainment</div>
+      </div>
+    </div>
+
     <nav>
       <span class="active" onclick="showList()">연예</span>
       <span>최신뉴스</span>
@@ -39,15 +460,37 @@
     </nav>
   </header>
 
-  <main id="app">
-    </main>
+  <main id="app"></main>
 
   <script>
+    // ===== 이미지: 외부 링크 없이도 보이게 "SVG 데이터 URL" 기본 생성 =====
+    function makeCoverDataUrl(seedText){
+      const safe = String(seedText).replace(/</g, "&lt;").replace(/>/g, "&gt;").slice(0, 42);
+      const svg =
+`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111"/>
+      <stop offset="1" stop-color="#3a3a3a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#g)"/>
+  <rect x="60" y="500" width="1080" height="2" fill="rgba(255,255,255,.25)"/>
+  <text x="60" y="560" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="44" fill="#fff" opacity="0.92">${safe}</text>
+  <text x="60" y="625" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="24" fill="#fff" opacity="0.75">담뉴스 · 연예</text>
+</svg>`;
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    const REPORTERS = ["박다람","한예슬","김서정","양종철","이서진","이장희"];
+    const PUBLISHER = "담뉴스";
+
     const articles = [
       {
         id: 1,
         title: "엠넷×EBS, 청소년·청년 음악 창작자 위한 새로운 도전… ‘HIT THE DROP’ 론칭",
         date: "20XX.0X.XX",
+        cover: null,
         paragraphs: [
           "엠넷과 EBS가 손잡고 청소년 및 청년 음악 창작자를 위한 프로듀싱 프로젝트 HIT THE DROP을 선보인다. ‘음악적 동료를 만나러 온다’를 슬로건으로 내건 이번 프로젝트는 작곡가와 음향 엔지니어의 협업을 중심으로, 음악이 만들어지는 전 과정을 조명하는 지원형 오디션 프로그램이다.",
           "HIT THE DROP은 가창 중심의 기존 오디션과 달리, 무대 뒤에서 음악을 완성하는 프로듀서와 음향 엔지니어를 주인공으로 내세운 것이 가장 큰 특징이다. 참가자는 본인이 주도적으로 제작한 미발매 곡을 바탕으로 평가를 받으며, 경쟁보다는 협업과 성장에 초점을 맞춘 미션을 수행하게 된다.",
@@ -61,6 +504,7 @@
         id: 2,
         title: "엠넷, 신인 작곡가를 위한 프로듀싱 프로젝트에 참가... EBS와 함께 프로듀싱 오디션 제작",
         date: "20XX.0X.XX",
+        cover: null,
         paragraphs: [
           "엠넷이 신인 작곡가 발굴 및 육성을 위해 HIT THE DROP 오디션 프로젝트를 제작 중이라고 밝혔다.",
           "이번 오디션은 정부와 함께하여 EBS에서 동시 송출을 진행하는 것으로 알려졌으며, 청소년과 청년층 음악 창작자를 주요 대상으로 한다.",
@@ -79,6 +523,7 @@
         id: 3,
         title: "“악편 없는 엠넷?”… ‘HIT THE DROP’, 예상 밖 화제성으로 입소문",
         date: "20XX.0X.XX",
+        cover: null,
         paragraphs: [
           "엠넷과 EBS가 공동 제작한 청소년·청년 프로듀싱 오디션 ‘HIT THE DROP’이 첫 방송 이후 예상 밖의 반응을 얻으며 화제를 모으고 있다.",
           "기존 엠넷 오디션 프로그램의 경쟁 중심 서사와 달리, 이번 프로그램은 지원형 프로젝트를 표방하며 참가자 간의 협업과 성장에 초점을 맞췄다.",
@@ -93,6 +538,7 @@
         id: 4,
         title: "현업 프로듀서 멘토링 화제… “오디션 아닌 실제 작업실 같다”",
         date: "20XX.0X.XX",
+        cover: null,
         paragraphs: [
           "청소년·청년 프로듀싱 오디션 〈HIT THE DROP〉에서 공개된 현업 프로듀서들의 멘토링 장면이 화제를 모으고 있다.",
           "방송에서는 참가자들이 실제 작업실과 유사한 환경에서 곡을 수정하고, 즉각적인 피드백을 받는 모습이 상세히 담기며 기존 오디션 프로그램과의 차별성을 드러냈다.",
@@ -106,6 +552,7 @@
         id: 5,
         title: "“교육 프로그램 같아서 계속 보게 된다”… 시청자 반응 확산",
         date: "20XX.0X.XX",
+        cover: null,
         paragraphs: [
           "〈HIT THE DROP〉을 향한 시청자 반응 중 가장 눈에 띄는 키워드는 단연 ‘교육적’이다.",
           "자극적인 경쟁 구도나 갈등 연출 대신, 설명과 과정 중심의 구성이 오히려 몰입도를 높이고 있다는 평가가 이어지고 있다.",
@@ -120,6 +567,7 @@
         id: 6,
         title: "프로듀서 중심으로 돌아간 제작 구조… ‘HIT THE DROP’이 보여준 협업의 방식",
         date: "20XX.0X.XX",
+        cover: null,
         paragraphs: [
           "〈HIT THE DROP〉은 프로듀서 중심의 제작 구조를 전면에 내세우며, 기존 오디션 프로그램과는 다른 음악 창작 과정을 보여주고 있다. 프로그램은 한 곡의 방향성과 정체성을 설계하는 프로듀서의 역할을 중심축으로 삼고, 그 과정에서 음향 엔지니어와의 협업이 어떻게 이루어지는지를 구체적으로 담아낸다.",
           "방송에서는 프로듀서가 곡의 콘셉트와 구조를 설계하고, 멜로디와 편곡 방향을 주도적으로 제시하는 장면이 반복적으로 등장한다.",
@@ -135,41 +583,390 @@
       }
     ];
 
+    // ===== localStorage keys =====
     const app = document.getElementById('app');
+    const keyLikes = (id) => `damnews_likes_${id}`;
+    const keyComments = (id) => `damnews_comments_${id}`;
+    const keyViews = (id) => `damnews_views_${id}`;
+    const keyReporter = (id) => `damnews_reporter_${id}`;
 
-    // 1. 목록 보기 함수
-    function showList() {
-      window.scrollTo(0, 0);
-      let listHtml = "";
-      for (let i = 0; i < articles.length; i++) {
-        listHtml += '<div class="news-title" onclick="showArticle(' + articles[i].id + ')">' + articles[i].title + '</div>';
-      }
-      app.innerHTML = listHtml;
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll("\"","&quot;")
+        .replaceAll("'","&#039;");
     }
 
-    // 2. 상세 보기 함수
-    function showArticle(id) {
-      const a = articles.find(function(item) { return item.id === id; });
+    function getNum(k, fallback=0){
+      const n = parseInt(localStorage.getItem(k) || "", 10);
+      return Number.isFinite(n) ? n : fallback;
+    }
+    function setNum(k, n){ localStorage.setItem(k, String(n)); }
+
+    function getLikes(id){ return getNum(keyLikes(id), 0); }
+    function setLikes(id, n){ setNum(keyLikes(id), n); }
+
+    function getViews(id){
+      let v = getNum(keyViews(id), -1);
+      if (v < 0){
+        // 처음 1번만 랜덤 생성 후 고정 저장
+        // (뉴스 느낌: 800~38,000)
+        v = Math.floor(800 + Math.random() * 37200);
+        setNum(keyViews(id), v);
+      }
+      return v;
+    }
+    function bumpViews(id){
+      // 상세 열 때마다 1 증가(너무 티 안 나게)
+      const v = getViews(id) + 1;
+      setNum(keyViews(id), v);
+      return v;
+    }
+
+    function getReporter(id){
+      const saved = localStorage.getItem(keyReporter(id));
+      if (saved) return saved;
+      const pick = REPORTERS[Math.floor(Math.random() * REPORTERS.length)];
+      localStorage.setItem(keyReporter(id), pick);
+      return pick;
+    }
+
+    function getComments(id){
+      try{
+        const raw = localStorage.getItem(keyComments(id));
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      }catch(e){ return []; }
+    }
+    function setComments(id, arr){
+      localStorage.setItem(keyComments(id), JSON.stringify(arr));
+    }
+
+    function nowString(){
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      const hh = String(d.getHours()).padStart(2,"0");
+      const mi = String(d.getMinutes()).padStart(2,"0");
+      return `${yyyy}.${mm}.${dd} ${hh}:${mi}`;
+    }
+
+    // cover 기본값 세팅
+    for (let i=0;i<articles.length;i++){
+      if (!articles[i].cover) articles[i].cover = makeCoverDataUrl(articles[i].title);
+    }
+
+    function likeArticle(articleId){
+      const n = getLikes(articleId) + 1;
+      setLikes(articleId, n);
+      const el = document.getElementById("likeCount");
+      if (el) el.textContent = String(n);
+
+      // 목록에 반영은 목록으로 돌아가면 자동
+    }
+
+    function submitComment(articleId){
+      const nameEl = document.getElementById("cname");
+      const textEl = document.getElementById("ctext");
+      const name = (nameEl.value || "").trim();
+      const text = (textEl.value || "").trim();
+
+      if (!text){
+        alert("댓글 내용을 입력해줘!");
+        textEl.focus();
+        return;
+      }
+
+      const arr = getComments(articleId);
+      arr.unshift({ name: name || "익명", text, time: nowString() });
+      setComments(articleId, arr);
+
+      textEl.value = "";
+      document.getElementById("commentList").innerHTML = renderComments(articleId);
+
+      // 댓글 수 표시 업데이트
+      const cc = document.getElementById("commentCount");
+      if (cc) cc.textContent = String(arr.length);
+    }
+
+    function deleteComment(articleId, idx){
+      const arr = getComments(articleId);
+      if (!arr[idx]) return;
+      if (!confirm("이 댓글을 삭제할까?")) return;
+      arr.splice(idx, 1);
+      setComments(articleId, arr);
+      document.getElementById("commentList").innerHTML = renderComments(articleId);
+
+      const cc = document.getElementById("commentCount");
+      if (cc) cc.textContent = String(arr.length);
+    }
+
+    function renderComments(articleId){
+      const list = getComments(articleId);
+      if (list.length === 0){
+        return `<div style="font-size:13px;color:#777;">아직 댓글이 없어요. 첫 댓글을 남겨보세요.</div>`;
+      }
+      return list.map((c, idx) => `
+        <div class="comment-item">
+          <div class="comment-head">
+            <div>
+              <span class="comment-name">${escapeHtml(c.name || "익명")}</span>
+              <span class="comment-time">${escapeHtml(c.time || "")}</span>
+            </div>
+            <span class="comment-del" onclick="deleteComment(${articleId}, ${idx})">삭제</span>
+          </div>
+          <div class="comment-text">${escapeHtml(c.text || "")}</div>
+        </div>
+      `).join("");
+    }
+
+    async function shareArticle(articleId){
+      const a = articles.find(x => x.id === articleId);
       if (!a) return;
 
-      window.scrollTo(0, 0);
-      let paragraphsHtml = "";
-      for (let j = 0; j < a.paragraphs.length; j++) {
-        paragraphsHtml += '<p>' + a.paragraphs[j] + '</p>';
-      }
+      const url = location.href.split("#")[0] + "#article-" + articleId;
+      const data = { title: a.title, text: `${PUBLISHER} · ${a.title}`, url };
 
-      app.innerHTML = 
-        '<div class="back" onclick="showList()">← 연예로 돌아가기</div>' +
-        '<div class="article">' +
-          '<h2>' + a.title + '</h2>' +
-          '<div class="date">' + a.date + '</div>' +
-          paragraphsHtml +
-        '</div>';
+      if (navigator.share){
+        try{
+          await navigator.share(data);
+          return;
+        }catch(e){
+          // 사용자가 취소하면 조용히
+        }
+      }
+      // fallback: copy to clipboard
+      try{
+        await navigator.clipboard.writeText(url);
+        alert("링크를 복사했어!");
+      }catch(e){
+        prompt("복사해서 사용해줘:", url);
+      }
     }
 
-    // 3. 페이지가 로드되면 바로 목록 실행
-    showList();
+    function formatNumber(n){
+      return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
+    function showList(){
+      window.scrollTo(0,0);
+
+      // 헤드라인은 1번 기사로 고정(원하면 id 바꾸면 됨)
+      const headline = articles[0];
+
+      // 랭킹(조회수 기준 TOP 5)
+      const ranked = [...articles]
+        .map(a => ({...a, views: getViews(a.id)}))
+        .sort((a,b) => b.views - a.views)
+        .slice(0,5);
+
+      // 목록(헤드라인 제외)
+      const rest = articles.slice(1);
+
+      let html = `
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="label">헤드라인</div>
+              <div class="more">담뉴스</div>
+            </div>
+            <div class="headline" onclick="showArticle(${headline.id})">
+              <div class="hero"><img alt="" src="${headline.cover}"></div>
+              <div class="body">
+                <div class="title">${headline.title}</div>
+                <div class="meta">
+                  <span class="chip">연예</span>
+                  <span>${headline.date}</span>
+                  <span class="chip">조회 ${formatNumber(getViews(headline.id))}</span>
+                  <span class="chip">추천 ${getLikes(headline.id)}</span>
+                  <span class="chip">댓글 ${getComments(headline.id).length}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel rank">
+            <div class="panel-head">
+              <div class="label">많이 본 뉴스</div>
+              <div class="more">연예</div>
+            </div>
+            ${ranked.map((a, i) => `
+              <div class="item" onclick="showArticle(${a.id})">
+                <div style="display:flex; gap:10px; align-items:flex-start;">
+                  <div class="no">${i+1}</div>
+                  <div class="t">${a.title}</div>
+                </div>
+                <div class="meta" style="margin-top:8px;">
+                  <span>${a.date}</span>
+                  <span class="chip">조회 ${formatNumber(a.views)}</span>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+
+          <div class="panel list" style="grid-column:1 / -1;">
+            <div class="panel-head">
+              <div class="label">연예 뉴스</div>
+              <div class="more">전체보기</div>
+            </div>
+
+            ${rest.map(a => {
+              const like = getLikes(a.id);
+              const cc = getComments(a.id).length;
+              const views = getViews(a.id);
+              return `
+                <div class="row" onclick="showArticle(${a.id})">
+                  <div class="thumb"><img alt="" src="${a.cover}"></div>
+                  <div>
+                    <div class="row-title">${a.title}</div>
+                    <div class="row-meta">
+                      <span>${a.date}</span>
+                      <span class="chip">담뉴스</span>
+                      <span class="chip">조회 ${formatNumber(views)}</span>
+                      <span class="chip">추천 ${like}</span>
+                      <span class="chip">댓글 ${cc}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+
+      app.innerHTML = html;
+      location.hash = ""; // 목록 상태
+    }
+
+    function showArticle(id){
+      const a = articles.find(x => x.id === id);
+      if (!a) return;
+
+      window.scrollTo(0,0);
+
+      // 조회수 증가(상세 볼 때 1씩)
+      const views = bumpViews(id);
+
+      const reporter = getReporter(id);
+      const likeCount = getLikes(id);
+      const comments = getComments(id);
+
+      // 본문 텍스트는 그대로 출력(변경/요약 없음)
+      let paragraphsHtml = "";
+      for (let j=0;j<a.paragraphs.length;j++){
+        paragraphsHtml += "<p>" + a.paragraphs[j] + "</p>";
+      }
+
+      // 관련 기사(자기 제외 3개)
+      const related = articles.filter(x => x.id !== id).slice(0,3);
+
+      app.innerHTML = `
+        <div class="back" onclick="showList()">← 연예로 돌아가기</div>
+
+        <div class="article-wrap">
+          <div class="article-hero"><img alt="" src="${a.cover}"></div>
+
+          <div class="article">
+            <h2>${a.title}</h2>
+
+            <div class="byline">
+              <span class="chip">${PUBLISHER}</span>
+              <span>${escapeHtml(reporter)} 기자</span>
+              <span>·</span>
+              <span>${a.date}</span>
+              <span class="chip">조회 <span id="viewCount">${formatNumber(views)}</span></span>
+              <span class="chip">추천 <span id="likeCount">${likeCount}</span></span>
+              <span class="chip">댓글 <span id="commentCount">${comments.length}</span></span>
+            </div>
+
+            <div class="actions">
+              <button class="btn primary" onclick="likeArticle(${id})">👍 이 기사를 추천합니다</button>
+              <button class="btn" onclick="shareArticle(${id})">🔗 공유</button>
+              <button class="btn" onclick="document.getElementById('comments').scrollIntoView({behavior:'smooth'})">💬 댓글</button>
+            </div>
+
+            ${paragraphsHtml}
+
+            <div class="section related">
+              <h3>이 기사를 추천합니다</h3>
+              ${related.map(r => `
+                <div class="item" onclick="showArticle(${r.id})">
+                  <div class="t">${r.title}</div>
+                  <div class="m">
+                    <span class="chip">연예</span>
+                    <span>${r.date}</span>
+                    <span class="chip">조회 ${formatNumber(getViews(r.id))}</span>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+
+            <div class="section" id="comments">
+              <h3>댓글</h3>
+              <div class="comment-box">
+                <div class="comment-form">
+                  <input id="cname" type="text" placeholder="닉네임(선택)">
+                  <textarea id="ctext" placeholder="댓글을 입력하세요"></textarea>
+                  <div class="comment-actions">
+                    <button class="btn" onclick="submitComment(${id})">등록</button>
+                  </div>
+                </div>
+                <div id="commentList">${renderComments(id)}</div>
+                <div class="footnote">※ 댓글/추천/조회수는 서버가 아니라 이 브라우저에 저장됩니다(로컬 저장).</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+
+      location.hash = "article-" + id;
+    }
+
+    // 해시로 바로 기사 열기 지원 (#article-3)
+    function boot(){
+      const h = location.hash || "";
+      const m = h.match(/^#article-(\d+)$/);
+      if (m){
+        const id = parseInt(m[1], 10);
+        if (Number.isFinite(id)) { showArticle(id); return; }
+      }
+      showList();
+    }
+
+    boot();
+    window.addEventListener("hashchange", boot);
   </script>
 </body>
 </html>
+
+/* 글자 렌더링/자간 통일 */
+body{
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  letter-spacing: -0.2px;
+}
+.article h2{ letter-spacing: -0.4px; }
+.article p{ letter-spacing: -0.15px; }
+
+/* 목록 요약 1줄 */
+.row-summary{
+  font-size: 13px;
+  color: #777;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+listHtml +=
+  '<div class="news-title" onclick="showArticle(' + articles[i].id + ')">' +
+    '<div>' + articles[i].title + '</div>' +
+    '<div class="row-summary">' + makeSummary(articles[i].paragraphs) + '</div>' +
+  '</div>';
+

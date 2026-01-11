@@ -4,945 +4,247 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>news</title>
-  <style>
-    :root{
-      --bg:#f6f7f8;
-      --paper:#fff;
-      --text:#111;
-      --muted:#666;
-      --line:#e6e6e6;
-      --chip:#f1f2f3;
-      --accent:#111;
-      --blue:#1a73e8;
-      --radius:14px;
-      --shadow:0 10px 26px rgba(0,0,0,.06);
-      --max:980px;
-    }
 
-    *{ box-sizing:border-box; }
+  <style>
     body{
       margin:0;
       font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.7;
-
-      /* ✅ 글자 렌더링/자간 통일 */
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
-      letter-spacing: -0.2px;
+      background:#f6f7f8;
+      color:#111;
+      letter-spacing:-0.2px;
+      line-height:1.8;
     }
 
     header{
-      background:var(--paper);
-      border-bottom:1px solid var(--line);
-      position:sticky;
-      top:0;
-      z-index:10;
-    }
-
-    .topbar{
-      max-width:var(--max);
-      margin:0 auto;
-      padding:16px 18px 10px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
+      background:#fff;
+      border-bottom:1px solid #e6e6e6;
+      padding:16px 18px;
     }
 
     header h1{
       margin:0;
       font-size:24px;
       cursor:pointer;
-      letter-spacing:-0.3px;
-    }
-
-    .brand{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-
-    .logo{
-      width:10px;
-      height:10px;
-      border-radius:2px;
-      background:#111;
-      display:inline-block;
-      margin-right:6px;
-    }
-
-    .subtitle{
-      font-size:12px;
-      color:#777;
-      margin-top:2px;
     }
 
     nav{
-      max-width:var(--max);
-      margin:0 auto;
-      padding:0 18px 10px;
+      margin-top:10px;
       display:flex;
-      gap:14px;
-      align-items:center;
+      gap:16px;
+      font-size:15px;
     }
 
     nav span{
-      font-size:15px;
       color:#777;
-      padding:8px 2px;
       cursor:default;
-      border-bottom:2px solid transparent;
     }
+
     nav span.active{
       color:#000;
       font-weight:700;
-      cursor:pointer;
-      border-bottom-color:#000;
+      border-bottom:2px solid #000;
+      padding-bottom:4px;
     }
 
     main{
-      max-width:var(--max);
+      max-width:900px;
       margin:0 auto;
-      padding:16px 18px 28px;
+      padding:20px;
     }
 
-    /* ====== LIST LAYOUT ====== */
-    .grid{
-      display:grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap:14px;
-    }
-
-    .panel{
-      background:var(--paper);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    .panel-head{
-      padding:12px 14px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .panel-head .label{
-      font-weight:800;
-      font-size:14px;
-      letter-spacing:-0.2px;
-    }
-    .panel-head .more{
-      font-size:12px;
-      color:#777;
-    }
-
-    /* Headline */
-    .headline{ cursor:pointer; }
-    .headline .hero{
-      width:100%;
-      height:260px;
-      background:#e9eaec;
-      border-bottom:1px solid var(--line);
-    }
-    .headline .hero img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .headline .body{ padding:14px 16px 16px; }
-    .headline .title{
-      font-size:22px;
-      line-height:1.35;
-      letter-spacing:-0.3px;
-      margin:0 0 10px;
-      font-weight:900;
-      word-break:keep-all;
-    }
-    .meta{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-      font-size:12px;
-      color:#666;
-    }
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:4px 10px;
-      border-radius:999px;
-      background:var(--chip);
-      border:1px solid #eee;
-      color:#444;
-      font-size:12px;
-    }
-
-    /* List items */
-    .list .row{
-      display:grid;
-      grid-template-columns: 132px 1fr;
-      gap:12px;
-      padding:12px 14px;
-      border-bottom:1px solid #f0f0f0;
-      cursor:pointer;
-      align-items:center;
-    }
-    .list .row:last-child{ border-bottom:none; }
-
-    .thumb{
-      width:132px;
-      height:84px;
-      background:#e9eaec;
-      border-radius:12px;
-      overflow:hidden;
-      border:1px solid #eee;
-    }
-    .thumb img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .row-title{
-      font-size:16px;
-      font-weight:800;
-      line-height:1.35;
-      margin:0 0 6px;
-      word-break:keep-all;
-    }
-    /* ✅ 목록 요약 1줄 */
-    .row-summary{
-      font-size:13px;
-      color:#777;
-      line-height:1.4;
-      display:-webkit-box;
-      -webkit-line-clamp:1;
-      -webkit-box-orient:vertical;
-      overflow:hidden;
-      margin:0 0 8px;
-      letter-spacing:-0.15px;
-    }
-
-    .row-meta{
-      font-size:12px;
-      color:#666;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    /* Sidebar ranking */
-    .rank .item{
-      padding:12px 14px;
-      border-bottom:1px solid #f0f0f0;
+    .news-title{
+      padding:18px 0;
+      border-bottom:1px solid #eee;
       cursor:pointer;
     }
-    .rank .item:last-child{ border-bottom:none; }
-    .rank .no{
-      display:inline-flex;
-      width:22px;
-      height:22px;
-      border-radius:6px;
-      background:#111;
-      color:#fff;
-      align-items:center;
-      justify-content:center;
-      font-size:12px;
-      font-weight:800;
-      margin-right:10px;
-      flex-shrink:0;
-    }
-    .rank .t{
-      font-size:14px;
-      font-weight:800;
-      line-height:1.35;
-      word-break:keep-all;
-    }
 
-    /* ====== ARTICLE ====== */
-    .back{
-      display:inline-block;
-      margin:6px 0 14px;
-      font-size:14px;
-      color:#777;
-      cursor:pointer;
+    .news-title:hover{
+      text-decoration:underline;
     }
-    .back:hover{ color:#000; text-decoration:underline; }
-
-    .article-wrap{
-      background:var(--paper);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    .article-hero{
-      height:320px;
-      background:#e9eaec;
-      border-bottom:1px solid var(--line);
-    }
-    .article-hero img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    .article{ padding:18px 18px 20px; }
 
     .article h2{
-      margin:0 0 10px;
       font-size:26px;
-      line-height:1.35;
-      letter-spacing:-0.4px; /* ✅ 통일 */
-      word-break:keep-all;
-      font-weight:900;
+      margin-top:0;
+      letter-spacing:-0.4px;
     }
 
-    .byline{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
+    .meta{
       font-size:13px;
-      color:#666;
-      padding-bottom:12px;
-      margin-bottom:14px;
-      border-bottom:1px solid #eee;
+      color:#777;
+      margin-bottom:18px;
     }
 
     .article p{
+      margin:20px 0;
       font-size:16px;
-      line-height:1.9;
-      margin:18px 0;
       color:#333;
-      text-align:justify;
-      word-break:keep-all;
-      letter-spacing:-0.15px; /* ✅ 통일 */
     }
 
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin:14px 0 8px;
-    }
-    .btn{
-      border:1px solid #ddd;
-      background:#fff;
-      color:#111;
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
+    .back{
       font-size:14px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-    .btn:hover{ border-color:#bbb; }
-    .btn.primary{
-      background:#111;
-      border-color:#111;
-      color:#fff;
-    }
-
-    .section{
-      margin-top:18px;
-      padding-top:18px;
-      border-top:1px solid #eee;
-    }
-    .section h3{
-      margin:0 0 12px;
-      font-size:15px;
-      font-weight:900;
-      letter-spacing:-0.2px;
-    }
-
-    /* Related */
-    .related .item{
-      border:1px solid #eee;
-      border-radius:12px;
-      padding:12px;
+      color:#777;
       cursor:pointer;
-      background:#fff;
+      margin-bottom:20px;
+      display:inline-block;
     }
-    .related .item:hover{ border-color:#ccc; }
-    .related .t{ font-size:15px; font-weight:800; margin-bottom:4px; word-break:keep-all; }
-    .related .m{ font-size:12px; color:#666; display:flex; gap:8px; flex-wrap:wrap; }
 
-    /* Comments */
-    .comment-box{
-      border:1px solid #eee;
-      border-radius:12px;
-      padding:12px;
-      background:#fff;
+    .back:hover{
+      text-decoration:underline;
+      color:#000;
     }
-    .comment-form{
-      display:grid;
-      grid-template-columns: 160px 1fr;
-      gap:10px;
+
+    .comment-box{
+      margin-top:40px;
+      border-top:1px solid #eee;
+      padding-top:20px;
+    }
+
+    .comment-box h3{
+      font-size:16px;
       margin-bottom:12px;
     }
-    .comment-form input,
-    .comment-form textarea{
-      border:1px solid #ddd;
-      border-radius:10px;
+
+    .comment-box textarea{
+      width:100%;
+      height:90px;
       padding:10px;
-      font-size:14px;
       font-family:inherit;
-      outline:none;
-      background:#fff;
-    }
-    .comment-form textarea{ min-height:90px; resize:vertical; }
-    .comment-actions{
-      display:flex;
-      justify-content:flex-end;
-      gap:10px;
-      grid-column: 1 / -1;
-    }
-    .comment-item{
-      border-top:1px solid #f1f1f1;
-      padding-top:12px;
-      margin-top:12px;
-    }
-    .comment-item:first-child{
-      border-top:none;
-      padding-top:0;
-      margin-top:0;
-    }
-    .comment-head{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-    }
-    .comment-name{ font-weight:900; font-size:13px; }
-    .comment-time{ font-size:12px; color:#888; margin-left:8px; font-weight:400; }
-    .comment-text{
-      margin-top:6px;
       font-size:14px;
-      color:#333;
-      white-space:pre-wrap;
-      word-break:break-word;
     }
-    .comment-del{
-      font-size:12px;
-      color:#999;
+
+    .comment-box button{
+      margin-top:10px;
+      padding:8px 14px;
+      font-size:14px;
       cursor:pointer;
     }
-    .comment-del:hover{ color:#111; text-decoration:underline; }
 
-    .footnote{
-      font-size:12px;
-      color:#777;
-      margin-top:10px;
-    }
-
-    @media (max-width: 860px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-    @media (max-width: 520px){
-      .list .row{ grid-template-columns: 110px 1fr; }
-      .thumb{ width:110px; height:74px; }
-      .headline .hero{ height:210px; }
-      .article-hero{ height:220px; }
-      .comment-form{ grid-template-columns: 1fr; }
+    .comment{
+      margin-top:14px;
+      border-top:1px solid #f0f0f0;
+      padding-top:10px;
+      font-size:14px;
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <div class="topbar">
-      <div>
-        <div class="brand">
-          <span class="logo"></span>
-          <h1 onclick="showList()">news</h1>
-        </div>
-        <div class="subtitle">담뉴스 · Entertainment</div>
+
+<header>
+  <h1 onclick="showList()">news</h1>
+  <nav>
+    <span class="active">연예</span>
+    <span>최신뉴스</span>
+    <span>사회</span>
+    <span>건강</span>
+  </nav>
+</header>
+
+<main id="app"></main>
+
+<!-- ================= Firebase (여기 위치가 정답) ================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBWCO3UwBks9WCrXtHVOlUzlRghLmz6ICU",
+    authDomain: "hit-the-drop-chat.firebaseapp.com",
+    projectId: "hit-the-drop-chat",
+    storageBucket: "hit-the-drop-chat.firebasestorage.app",
+    messagingSenderId: "1088018360838",
+    appId: "1:1088018360838:web:c31f7f266f638b67cd3187"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  window.db = getFirestore(app);
+
+  const auth = getAuth(app);
+  signInAnonymously(auth);
+</script>
+
+<!-- ================= 뉴스 로직 ================= -->
+<script>
+  const articles = [
+    {
+      id: 1,
+      title: "엠넷×EBS, 청소년·청년 음악 창작자 위한 새로운 도전… ‘HIT THE DROP’ 론칭",
+      date: "20XX.0X.XX",
+      paragraphs: [
+        "엠넷과 EBS가 손잡고 청소년 및 청년 음악 창작자를 위한 프로듀싱 프로젝트 HIT THE DROP을 선보인다.",
+        "‘음악적 동료를 만나러 온다’를 슬로건으로 내건 이번 프로젝트는 작곡가와 음향 엔지니어의 협업을 중심으로 음악 제작 전 과정을 조명한다.",
+        "기존 가창 중심 오디션과 달리, 무대 뒤 창작자를 주인공으로 내세운 점이 특징이다.",
+        "HIT THE DROP은 20XX년 하반기 첫 방송을 목표로 제작 중이다."
+      ]
+    }
+  ];
+
+  const appEl = document.getElementById("app");
+
+  function showList(){
+    let html = "";
+    articles.forEach(a=>{
+      html += `<div class="news-title" onclick="showArticle(${a.id})">${a.title}</div>`;
+    });
+    appEl.innerHTML = html;
+  }
+
+  async function showArticle(id){
+    const a = articles.find(x=>x.id===id);
+    if(!a) return;
+
+    let html = `
+      <div class="back" onclick="showList()">← 연예로 돌아가기</div>
+      <div class="article">
+        <h2>${a.title}</h2>
+        <div class="meta">담뉴스 · ${a.date}</div>
+        ${a.paragraphs.map(p=>`<p>${p}</p>`).join("")}
       </div>
-    </div>
 
-    <nav>
-      <span class="active" onclick="showList()">연예</span>
-      <span>최신뉴스</span>
-      <span>사회</span>
-      <span>건강</span>
-    </nav>
-  </header>
+      <div class="comment-box">
+        <h3>댓글</h3>
+        <textarea id="commentText" placeholder="댓글을 입력하세요"></textarea>
+        <br>
+        <button onclick="submitComment(${id})">등록</button>
+        <div id="comments"></div>
+      </div>
+    `;
 
-  <main id="app"></main>
+    appEl.innerHTML = html;
+    loadComments(id);
+  }
 
-  <script>
-    function makeCoverDataUrl(seedText){
-      const safe = String(seedText).replace(/</g, "&lt;").replace(/>/g, "&gt;").slice(0, 42);
-      const svg =
-`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#111"/>
-      <stop offset="1" stop-color="#3a3a3a"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="700" fill="url(#g)"/>
-  <rect x="60" y="500" width="1080" height="2" fill="rgba(255,255,255,.25)"/>
-  <text x="60" y="560" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="44" fill="#fff" opacity="0.92">${safe}</text>
-  <text x="60" y="625" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="24" fill="#fff" opacity="0.75">담뉴스 · 연예</text>
-</svg>`;
-      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
-    }
+  async function submitComment(articleId){
+    const text = document.getElementById("commentText").value.trim();
+    if(!text) return alert("댓글을 입력해줘");
 
-    const REPORTERS = ["박다람","한예슬","김서정","양종철","이서진","이장희"];
-    const PUBLISHER = "담뉴스";
+    await addDoc(collection(window.db, "comments"), {
+      articleId,
+      text,
+      createdAt: new Date()
+    });
 
-    const articles = [
-      {
-        id: 1,
-        title: "엠넷×EBS, 청소년·청년 음악 창작자 위한 새로운 도전… ‘HIT THE DROP’ 론칭",
-        date: "20XX.0X.XX",
-        cover: null,
-        paragraphs: [
-          "엠넷과 EBS가 손잡고 청소년 및 청년 음악 창작자를 위한 프로듀싱 프로젝트 HIT THE DROP을 선보인다. ‘음악적 동료를 만나러 온다’를 슬로건으로 내건 이번 프로젝트는 작곡가와 음향 엔지니어의 협업을 중심으로, 음악이 만들어지는 전 과정을 조명하는 지원형 오디션 프로그램이다.",
-          "HIT THE DROP은 가창 중심의 기존 오디션과 달리, 무대 뒤에서 음악을 완성하는 프로듀서와 음향 엔지니어를 주인공으로 내세운 것이 가장 큰 특징이다. 참가자는 본인이 주도적으로 제작한 미발매 곡을 바탕으로 평가를 받으며, 경쟁보다는 협업과 성장에 초점을 맞춘 미션을 수행하게 된다.",
-          "특히 이번 프로젝트는 정부의 예술인 청소년·청년 지원 프로그램의 일환으로 기획돼, EBS와 엠넷에서 동시 송출된다. 제작진은 “방송을 위한 극적인 연출보다, 실제 창작 환경과 가까운 과정을 담아내는 데 집중할 계획”이라며 “참가자들이 안전하게 도전하고 성장할 수 있는 구조를 마련했다”고 밝혔다.",
-          "프로그램은 프로듀서와 음향 엔지니어가 서로를 선택하며 팀을 구성하는 방식으로 진행된다. 장르와 스타일의 제한 없이 다양한 음악적 시도를 존중하며, 현업 작곡가와 업계 전문가들이 심사 및 멘토링에 참여해 실질적인 피드백을 제공할 예정이다.",
-          "엠넷 측은 “HIT THE DROP은 결과보다 과정을 중요하게 여기는 프로젝트”라며 “아직 세상에 알려지지 않은 청소년·청년 창작자들이 음악적 동료를 만나, 각자의 가능성을 확장하는 계기가 되길 바란다”고 전했다.",
-          "한편 HIT THE DROP은 20XX년 하반기 첫 방송을 목표로 제작 중이며, 참가자 모집 및 세부 일정은 엠넷 공식 홈페이지와 SNS 채널을 통해 순차적으로 공개될 예정이다."
-        ]
-      },
-      {
-        id: 2,
-        title: "엠넷, 신인 작곡가를 위한 프로듀싱 프로젝트에 참가... EBS와 함께 프로듀싱 오디션 제작",
-        date: "20XX.0X.XX",
-        cover: null,
-        paragraphs: [
-          "엠넷이 신인 작곡가 발굴 및 육성을 위해 HIT THE DROP 오디션 프로젝트를 제작 중이라고 밝혔다.",
-          "이번 오디션은 정부와 함께하여 EBS에서 동시 송출을 진행하는 것으로 알려졌으며, 청소년과 청년층 음악 창작자를 주요 대상으로 한다.",
-          "현재 HIT THE DROP 프로젝트는 X월 X일(월)부터 XX일(금)까지 엠넷 공식 홈페이지를 통해 참가 접수를 받는다.",
-          "지원자는 본인이 주도적으로 제작한 미발매 곡 2곡을 제출해야 하며, 퍼블리싱 회사와 계약되어 있는 경우에는 지원이 제한된다.",
-          "최종 합격자는 현업 작곡가를 포함한 업계 전문가 심사를 거쳐 X월 중 발표될 예정이다.",
-          "이번 프로젝트는 청소년 및 청년층 음악 창작자에게 실질적인 기회를 제공하는 지원형 오디션이라는 점에서 주목받고 있다.",
-          "참가자는 음악 장르에 제한 없이 지원할 수 있으며, 작곡 경험이 있다면 전공 여부와 관계없이 누구나 도전 가능하다.",
-          "프로그램을 통해 선발된 참가자들은 현업 프로듀서와의 멘토링과 공동 작업 미션을 수행하게 된다.",
-          "최종 우승자에게는 향후 프로듀싱 활동을 위한 지원이 제공될 예정이다.",
-          "엠넷 측은 “이번 프로젝트는 음악의 시작점에 있는 창작자들에게 스포트라이트를 비추는 기회가 될 것”이라고 전했다.",
-          "한편 HIT THE DROP은 20XX년 하반기 엠넷과 EBS를 통해 첫 방송될 예정이다."
-        ]
-      },
-      {
-        id: 3,
-        title: "“악편 없는 엠넷?”… ‘HIT THE DROP’, 예상 밖 화제성으로 입소문",
-        date: "20XX.0X.XX",
-        cover: null,
-        paragraphs: [
-          "엠넷과 EBS가 공동 제작한 청소년·청년 프로듀싱 오디션 ‘HIT THE DROP’이 첫 방송 이후 예상 밖의 반응을 얻으며 화제를 모으고 있다.",
-          "기존 엠넷 오디션 프로그램의 경쟁 중심 서사와 달리, 이번 프로그램은 지원형 프로젝트를 표방하며 참가자 간의 협업과 성장에 초점을 맞췄다.",
-          "방송 직후 SNS와 온라인 커뮤니티에서는 “엠넷인데 악편이 없다”, “편집이 너무 순해서 놀랐다”는 반응이 이어졌다.",
-          "특히 트위터(X)에서는 프로그램 관련 클립과 짤이 빠르게 확산되며 화제를 모았다.",
-          "시청자들은 참가자들이 서로를 탈락 경쟁자가 아닌 음악적 동료로 대하는 모습에 신선함을 느꼈다는 평가다.",
-          "일부 시청자는 “누가 떨어질지가 아니라, 어떤 음악이 나올지가 궁금해지는 오디션”이라고 반응했다.",
-          "제작진은 “갈등을 과장하기보다 창작 과정 자체의 긴장과 고민을 담고자 했다”며 “실제 음악 작업의 현실에 가깝게 접근했다”고 밝혔다."
-        ]
-      },
-      {
-        id: 4,
-        title: "현업 프로듀서 멘토링 화제… “오디션 아닌 실제 작업실 같다”",
-        date: "20XX.0X.XX",
-        cover: null,
-        paragraphs: [
-          "청소년·청년 프로듀싱 오디션 〈HIT THE DROP〉에서 공개된 현업 프로듀서들의 멘토링 장면이 화제를 모으고 있다.",
-          "방송에서는 참가자들이 실제 작업실과 유사한 환경에서 곡을 수정하고, 즉각적인 피드백을 받는 모습이 상세히 담기며 기존 오디션 프로그램과의 차별성을 드러냈다.",
-          "멘토들은 단순히 결과물을 평가하는 데 그치지 않고, 곡의 구조와 멜로디 전개, 사운드 디자인과 믹싱 방향까지 세밀하게 짚어주며 참가자들과 함께 곡을 완성해 나갔다. 특히 “왜 이렇게 들리는지”, “이 선택이 어떤 인상을 주는지”와 같은 질문을 중심으로 사고 과정을 설명해주는 방식이 인상적이라는 평가다.",
-          "참가자들 역시 “탈락을 걱정하기보다, 지금 이 곡을 어떻게 더 좋게 만들 수 있을지를 고민하게 된다”, “오디션이라기보다 실제 현업 수업을 듣는 느낌”이라며 기존 음악 프로그램과는 다른 경험을 하고 있다고 전했다.",
-          "시청자 반응도 긍정적이다. 온라인 커뮤니티에서는 “음악이 완성되는 과정을 이렇게 자세히 보여주는 방송은 처음”, “프로듀서가 어떤 기준으로 판단하는지 알 수 있어서 흥미롭다”는 의견이 이어지고 있다. 일부 시청자는 “음악 전공이 아니어도 이해할 수 있게 설명해준다”고 평가했다.",
-          "업계 관계자들 또한 “제작진은 “멘토링 장면은 최대한 편집을 줄이고 실제 작업 흐름을 살리고자 했다”며 “참가자와 멘토 모두에게 의미 있는 시간이 되도록 구성하고 있다”고 밝혔다."
-        ]
-      },
-      {
-        id: 5,
-        title: "“교육 프로그램 같아서 계속 보게 된다”… 시청자 반응 확산",
-        date: "20XX.0X.XX",
-        cover: null,
-        paragraphs: [
-          "〈HIT THE DROP〉을 향한 시청자 반응 중 가장 눈에 띄는 키워드는 단연 ‘교육적’이다.",
-          "자극적인 경쟁 구도나 갈등 연출 대신, 설명과 과정 중심의 구성이 오히려 몰입도를 높이고 있다는 평가가 이어지고 있다.",
-          "온라인 커뮤니티와 SNS에서는 “음악 전공 수업을 예능으로 보는 느낌”, “편안해서 끊지 않고 끝까지 보게 된다”는 반응이 다수 등장했다. 특히 참가자들이 시행착오를 겪으며 곡을 수정해 나가는 과정이 그대로 담긴 점이 호평을 받고 있다.",
-          "일부 시청자는 “기존 오디션은 누가 떨어질지 긴장하며 봤다면, 이 프로그램은 어떤 결과물이 나올지가 더 궁금하다”고 말했다.",
-          "트위터(X)의 한 시청자는 “경쟁보다 성장에 집중하는 분위기가 오히려 더 현실적”이라고 평가했다.",
-          "제작진은 “〈HIT THE DROP〉은 청소년·청년 창작자뿐 아니라, 음악에 관심 있는 시청자 모두를 대상으로 한 프로그램”이라며 “음악을 만드는 사람들의 고민과 선택을 이해할 수 있도록 구성했다”고 설명했다.",
-          "전문가들은 지원형 오디션이라는 새로운 포맷이 향후 음악 예능의 흐름에 변화를 줄 가능성도 있다고 분석한다."
-        ]
-      },
-      {
-        id: 6,
-        title: "프로듀서 중심으로 돌아간 제작 구조… ‘HIT THE DROP’이 보여준 협업의 방식",
-        date: "20XX.0X.XX",
-        cover: null,
-        paragraphs: [
-          "〈HIT THE DROP〉은 프로듀서 중심의 제작 구조를 전면에 내세우며, 기존 오디션 프로그램과는 다른 음악 창작 과정을 보여주고 있다. 프로그램은 한 곡의 방향성과 정체성을 설계하는 프로듀서의 역할을 중심축으로 삼고, 그 과정에서 음향 엔지니어와의 협업이 어떻게 이루어지는지를 구체적으로 담아낸다.",
-          "방송에서는 프로듀서가 곡의 콘셉트와 구조를 설계하고, 멜로디와 편곡 방향을 주도적으로 제시하는 장면이 반복적으로 등장한다.",
-          "이후 음향 엔지니어가 사운드의 질감과 밸런스를 보완하며 프로듀서의 의도를 구현하는 과정이 자연스럽게 이어진다.",
-          "이 같은 흐름은 음악 제작에서 프로듀서가 맡는 핵심적인 역할을 명확히 드러낸다는 평가다.",
-          "업계 관계자들은 “〈HIT THE DROP〉은 프로듀서를 단순한 작곡가가 아닌, 프로젝트 전체를 총괄하는 창작자로 묘사한다”며 “음향 엔지니어와의 협업 구조 역시 현실적인 방식에 가깝다”고 분석했다.",
-          "한 관계자는 “음향이 주도권을 갖기보다는, 프로듀서의 방향성을 어떻게 구현하느냐에 초점을 맞춘 점이 인상적”이라고 전했다.",
-          "시청자 반응도 비슷하다. 온라인 커뮤니티에서는 “프로듀서가 어떤 고민을 거쳐 곡의 방향을 정하는지 알 수 있다”, “음향은 보조적이지만 중요한 역할로 잘 그려진다”는 평가가 이어지고 있다.",
-          "음악 제작 경험이 없는 시청자들도 프로듀서의 사고 과정을 따라가며 프로그램에 몰입하고 있다는 반응이다.",
-          "제작진은 “〈HIT THE DROP〉의 중심은 프로듀서”라며 “음향 엔지니어와의 협업은 그 방향을 더 잘 완성하기 위한 과정으로 담아내고 있다”고 밝혔다.",
-          "이어 “음악 제작의 주도권과 협업 구조를 동시에 보여주는 것이 이번 프로젝트의 핵심”이라고 덧붙였다."
-        ]
+    document.getElementById("commentText").value = "";
+    loadComments(articleId);
+  }
+
+  async function loadComments(articleId){
+    const snap = await getDocs(collection(window.db, "comments"));
+    let html = "";
+
+    snap.forEach(doc=>{
+      const d = doc.data();
+      if(d.articleId === articleId){
+        html += `<div class="comment">💬 ${d.text}</div>`;
       }
-    ];
+    });
 
-    const app = document.getElementById('app');
-    const keyLikes = (id) => `damnews_likes_${id}`;
-    const keyComments = (id) => `damnews_comments_${id}`;
-    const keyViews = (id) => `damnews_views_${id}`;
-    const keyReporter = (id) => `damnews_reporter_${id}`;
+    document.getElementById("comments").innerHTML = html;
+  }
 
-    function escapeHtml(s){
-      return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll("\"","&quot;")
-        .replaceAll("'","&#039;");
-    }
+  showList();
+</script>
 
-    /* ✅ 목록 요약 1줄 자동 생성 */
-    function makeSummary(paragraphs){
-      const first = (paragraphs && paragraphs[0]) ? paragraphs[0] : "";
-      const one = first.replace(/\s+/g, " ").trim();
-      return one.length > 70 ? one.slice(0, 70) + "…" : one;
-    }
-
-    function getNum(k, fallback=0){
-      const n = parseInt(localStorage.getItem(k) || "", 10);
-      return Number.isFinite(n) ? n : fallback;
-    }
-    function setNum(k, n){ localStorage.setItem(k, String(n)); }
-
-    function getLikes(id){ return getNum(keyLikes(id), 0); }
-    function setLikes(id, n){ setNum(keyLikes(id), n); }
-
-    function getViews(id){
-      let v = getNum(keyViews(id), -1);
-      if (v < 0){
-        v = Math.floor(800 + Math.random() * 37200);
-        setNum(keyViews(id), v);
-      }
-      return v;
-    }
-    function bumpViews(id){
-      const v = getViews(id) + 1;
-      setNum(keyViews(id), v);
-      return v;
-    }
-
-    function getReporter(id){
-      const saved = localStorage.getItem(keyReporter(id));
-      if (saved) return saved;
-      const pick = REPORTERS[Math.floor(Math.random() * REPORTERS.length)];
-      localStorage.setItem(keyReporter(id), pick);
-      return pick;
-    }
-
-    function getComments(id){
-      try{
-        const raw = localStorage.getItem(keyComments(id));
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
-      }catch(e){ return []; }
-    }
-    function setComments(id, arr){
-      localStorage.setItem(keyComments(id), JSON.stringify(arr));
-    }
-
-    function nowString(){
-      const d = new Date();
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth()+1).padStart(2,"0");
-      const dd = String(d.getDate()).padStart(2,"0");
-      const hh = String(d.getHours()).padStart(2,"0");
-      const mi = String(d.getMinutes()).padStart(2,"0");
-      return `${yyyy}.${mm}.${dd} ${hh}:${mi}`;
-    }
-
-    for (let i=0;i<articles.length;i++){
-      if (!articles[i].cover) articles[i].cover = makeCoverDataUrl(articles[i].title);
-    }
-
-    function likeArticle(articleId){
-      const n = getLikes(articleId) + 1;
-      setLikes(articleId, n);
-      const el = document.getElementById("likeCount");
-      if (el) el.textContent = String(n);
-    }
-
-    function submitComment(articleId){
-      const nameEl = document.getElementById("cname");
-      const textEl = document.getElementById("ctext");
-      const name = (nameEl.value || "").trim();
-      const text = (textEl.value || "").trim();
-
-      if (!text){
-        alert("댓글 내용을 입력해줘!");
-        textEl.focus();
-        return;
-      }
-
-      const arr = getComments(articleId);
-      arr.unshift({ name: name || "익명", text, time: nowString() });
-      setComments(articleId, arr);
-
-      textEl.value = "";
-      document.getElementById("commentList").innerHTML = renderComments(articleId);
-
-      const cc = document.getElementById("commentCount");
-      if (cc) cc.textContent = String(arr.length);
-    }
-
-    function deleteComment(articleId, idx){
-      const arr = getComments(articleId);
-      if (!arr[idx]) return;
-      if (!confirm("이 댓글을 삭제할까?")) return;
-      arr.splice(idx, 1);
-      setComments(articleId, arr);
-      document.getElementById("commentList").innerHTML = renderComments(articleId);
-
-      const cc = document.getElementById("commentCount");
-      if (cc) cc.textContent = String(arr.length);
-    }
-
-    function renderComments(articleId){
-      const list = getComments(articleId);
-      if (list.length === 0){
-        return `<div style="font-size:13px;color:#777;">아직 댓글이 없어요. 첫 댓글을 남겨보세요.</div>`;
-      }
-      return list.map((c, idx) => `
-        <div class="comment-item">
-          <div class="comment-head">
-            <div>
-              <span class="comment-name">${escapeHtml(c.name || "익명")}</span>
-              <span class="comment-time">${escapeHtml(c.time || "")}</span>
-            </div>
-            <span class="comment-del" onclick="deleteComment(${articleId}, ${idx})">삭제</span>
-          </div>
-          <div class="comment-text">${escapeHtml(c.text || "")}</div>
-        </div>
-      `).join("");
-    }
-
-    async function shareArticle(articleId){
-      const a = articles.find(x => x.id === articleId);
-      if (!a) return;
-
-      const url = location.href.split("#")[0] + "#article-" + articleId;
-      const data = { title: a.title, text: `${PUBLISHER} · ${a.title}`, url };
-
-      if (navigator.share){
-        try{ await navigator.share(data); return; }catch(e){}
-      }
-      try{
-        await navigator.clipboard.writeText(url);
-        alert("링크를 복사했어!");
-      }catch(e){
-        prompt("복사해서 사용해줘:", url);
-      }
-    }
-
-    function formatNumber(n){
-      return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    function showList(){
-      window.scrollTo(0,0);
-
-      const headline = articles[0];
-
-      const ranked = [...articles]
-        .map(a => ({...a, views: getViews(a.id)}))
-        .sort((a,b) => b.views - a.views)
-        .slice(0,5);
-
-      const rest = articles.slice(1);
-
-      let html = `
-        <div class="grid">
-          <div class="panel">
-            <div class="panel-head">
-              <div class="label">헤드라인</div>
-              <div class="more">담뉴스</div>
-            </div>
-            <div class="headline" onclick="showArticle(${headline.id})">
-              <div class="hero"><img alt="" src="${headline.cover}"></div>
-              <div class="body">
-                <div class="title">${headline.title}</div>
-                <div class="meta">
-                  <span class="chip">연예</span>
-                  <span>${headline.date}</span>
-                  <span class="chip">조회 ${formatNumber(getViews(headline.id))}</span>
-                  <span class="chip">추천 ${getLikes(headline.id)}</span>
-                  <span class="chip">댓글 ${getComments(headline.id).length}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel rank">
-            <div class="panel-head">
-              <div class="label">많이 본 뉴스</div>
-              <div class="more">연예</div>
-            </div>
-            ${ranked.map((a, i) => `
-              <div class="item" onclick="showArticle(${a.id})">
-                <div style="display:flex; gap:10px; align-items:flex-start;">
-                  <div class="no">${i+1}</div>
-                  <div class="t">${a.title}</div>
-                </div>
-                <div class="meta" style="margin-top:8px;">
-                  <span>${a.date}</span>
-                  <span class="chip">조회 ${formatNumber(a.views)}</span>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-
-          <div class="panel list" style="grid-column:1 / -1;">
-            <div class="panel-head">
-              <div class="label">연예 뉴스</div>
-              <div class="more">전체보기</div>
-            </div>
-
-            ${rest.map(a => {
-              const like = getLikes(a.id);
-              const cc = getComments(a.id).length;
-              const views = getViews(a.id);
-              return `
-                <div class="row" onclick="showArticle(${a.id})">
-                  <div class="thumb"><img alt="" src="${a.cover}"></div>
-                  <div>
-                    <div class="row-title">${a.title}</div>
-                    <div class="row-summary">${escapeHtml(makeSummary(a.paragraphs))}</div>
-                    <div class="row-meta">
-                      <span>${a.date}</span>
-                      <span class="chip">담뉴스</span>
-                      <span class="chip">조회 ${formatNumber(views)}</span>
-                      <span class="chip">추천 ${like}</span>
-                      <span class="chip">댓글 ${cc}</span>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join("")}
-          </div>
-        </div>
-      `;
-
-      app.innerHTML = html;
-      location.hash = "";
-    }
-
-    function showArticle(id){
-      const a = articles.find(x => x.id === id);
-      if (!a) return;
-
-      window.scrollTo(0,0);
-
-      const views = bumpViews(id);
-      const reporter = getReporter(id);
-      const likeCount = getLikes(id);
-      const comments = getComments(id);
-
-      let paragraphsHtml = "";
-      for (let j=0;j<a.paragraphs.length;j++){
-        paragraphsHtml += "<p>" + a.paragraphs[j] + "</p>";
-      }
-
-      const related = articles.filter(x => x.id !== id).slice(0,3);
-
-      app.innerHTML = `
-        <div class="back" onclick="showList()">← 연예로 돌아가기</div>
-
-        <div class="article-wrap">
-          <div class="article-hero"><img alt="" src="${a.cover}"></div>
-
-          <div class="article">
-            <h2>${a.title}</h2>
-
-            <div class="byline">
-              <span class="chip">${PUBLISHER}</span>
-              <span>${escapeHtml(reporter)} 기자</span>
-              <span>·</span>
-              <span>${a.date}</span>
-              <span class="chip">조회 <span id="viewCount">${formatNumber(views)}</span></span>
-              <span class="chip">추천 <span id="likeCount">${likeCount}</span></span>
-              <span class="chip">댓글 <span id="commentCount">${comments.length}</span></span>
-            </div>
-
-            <div class="actions">
-              <button class="btn primary" onclick="likeArticle(${id})">👍 이 기사를 추천합니다</button>
-              <button class="btn" onclick="shareArticle(${id})">🔗 공유</button>
-              <button class="btn" onclick="document.getElementById('comments').scrollIntoView({behavior:'smooth'})">💬 댓글</button>
-            </div>
-
-            ${paragraphsHtml}
-
-            <div class="section related">
-              <h3>이 기사를 추천합니다</h3>
-              ${related.map(r => `
-                <div class="item" onclick="showArticle(${r.id})">
-                  <div class="t">${r.title}</div>
-                  <div class="m">
-                    <span class="chip">연예</span>
-                    <span>${r.date}</span>
-                    <span class="chip">조회 ${formatNumber(getViews(r.id))}</span>
-                  </div>
-                </div>
-              `).join("")}
-            </div>
-
-            <div class="section" id="comments">
-              <h3>댓글</h3>
-              <div class="comment-box">
-                <div class="comment-form">
-                  <input id="cname" type="text" placeholder="닉네임(선택)">
-                  <textarea id="ctext" placeholder="댓글을 입력하세요"></textarea>
-                  <div class="comment-actions">
-                    <button class="btn" onclick="submitComment(${id})">등록</button>
-                  </div>
-                </div>
-                <div id="commentList">${renderComments(id)}</div>
-                <div class="footnote">※ 댓글/추천/조회수는 서버가 아니라 이 브라우저에 저장됩니다(로컬 저장).</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      `;
-
-      location.hash = "article-" + id;
-    }
-
-    function boot(){
-      const h = location.hash || "";
-      const m = h.match(/^#article-(\d+)$/);
-      if (m){
-        const id = parseInt(m[1], 10);
-        if (Number.isFinite(id)) { showArticle(id); return; }
-      }
-      showList();
-    }
-
-    boot();
-    window.addEventListener("hashchange", boot);
-  </script>
 </body>
 </html>
